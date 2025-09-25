@@ -1,0 +1,45 @@
+<?php
+
+
+namespace App\Models;
+
+
+use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
+
+
+class Book extends Model implements HasMedia
+{
+    use InteractsWithMedia, HasSlug;
+
+
+    protected $fillable = ['seller_id', 'category_id', 'title', 'description', 'price', 'stock', 'status'];
+
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()->generateSlugsFrom('title')->saveSlugsTo('slug');
+    }
+
+
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
+
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('covers')->singleFile();
+        $this->addMediaCollection('pdfs')->singleFile();
+    }
+}
