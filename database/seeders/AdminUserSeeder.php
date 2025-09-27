@@ -5,24 +5,31 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Create Admin user
+        // Create Admin user
         $admin = User::firstOrCreate(
-            ['email' => 'admin@example.com'],
             [
-                'name' => 'Admin User',
-                'password' => bcrypt('password123'),
+                'username' => 'admin_1',
+                'email' => 'admin1@example.com'
+            ], // check if existing username, email
+            [
+                'name' => 'Admin 1',
+                'password' => bcrypt('1234qweR'),
             ]
         );
 
-        // 2. Create Admin role if not exists
+        // Create Admin role if not exists
         $role = Role::firstOrCreate(['name' => 'Admin']);
 
-        // 3. Assign role to user
+        // Assign role to user
         $admin->assignRole($role);
+
+        // Assign permissions to user
+        $admin->givePermissionTo(Permission::all());
     }
 }

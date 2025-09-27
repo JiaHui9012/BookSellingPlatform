@@ -14,16 +14,21 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run()
     {
         $permissions = [
-            'manage users',
-            'manage categories',
-            'approve sellers',
-            'manage all books',
-            'view all orders',
-            'create book',
-            'edit own book',
-            'delete own book',
-            'view own orders',
-            'update profile'
+            'view users',
+            'create users',
+            'edit users',
+
+            'view categories',
+            'create categories',
+            'edit categories',
+
+            'view books',
+            'create books',
+            'edit books',
+
+            'view orders',
+
+            'approve sellers'
         ];
 
 
@@ -37,6 +42,18 @@ class RolesAndPermissionsSeeder extends Seeder
 
 
         $seller = Role::firstOrCreate(['name' => 'Seller']);
-        $seller->givePermissionTo(['create book', 'edit own book', 'delete own book', 'view own orders', 'update profile']);
+        $seller->givePermissionTo([
+            'view books',
+            'create books',
+            'edit books',
+            'view orders'
+        ]);
+
+        $buyer = Role::firstOrCreate(['name' => 'Buyer']);
+        $buyer->givePermissionTo([
+            'view categories',
+            'view books',
+            'view orders'
+        ]);
     }
 }
