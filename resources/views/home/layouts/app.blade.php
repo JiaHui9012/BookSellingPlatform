@@ -45,7 +45,7 @@
                     <a href="{{ route('users.sellers.pending') }}" class="block px-4 py-2 hover:bg-gray-200">✅ Seller Approval</a>
                 </li>
                 <li>
-                    <a href="" class="block px-4 py-2 hover:bg-gray-200">🏷️ Category</a>
+                    <a href="{{ route('categories.index') }}" class="block px-4 py-2 hover:bg-gray-200">🏷️ Category</a>
                 </li>
                 @endrole
                 @if (auth()->user()->hasDirectPermission('view books'))

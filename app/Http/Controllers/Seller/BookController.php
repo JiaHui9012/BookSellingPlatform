@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Seller;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
@@ -19,7 +20,8 @@ class BookController extends Controller
         } else {
             $books = Book::where('user_id', $user->id)->latest()->get();
         }
-        return view('home.seller.books.index', compact('books'));
+        $categories = Category::all();
+        return view('home.seller.books.index', compact('books', 'categories'));
     }
 
     public function store(Request $request)
@@ -27,6 +29,7 @@ class BookController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|numeric|min:0',
             'cover' => 'nullable|image|max:2048',
@@ -35,6 +38,7 @@ class BookController extends Controller
         $book = new Book();
         $book->title = $validated['title'];
         $book->description = $validated['description'] ?? null;
+        $book->category_id = $validated['category_id'] ?? null;
         $book->price = $validated['price'];
         $book->stock = $validated['stock'];
         $book->user_id = Auth::id();
@@ -52,8 +56,9 @@ class BookController extends Controller
         if ($book->user_id != Auth::id()) {
             abort(403);
         }
+        $categories = Category::all();
         // return view('books.edit', compact('book'));
-        return view('home.seller.books.partials.bookFields', compact('book'))->render();
+        return view('home.seller.books.partials.bookFields', compact('book', 'categories'))->render();
     }
 
     public function update(Request $request, Book $book)
@@ -65,6 +70,7 @@ class BookController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|numeric|min:0',
             'cover' => 'nullable|image|max:2048',

@@ -27,7 +27,7 @@ class Book extends Model implements HasMedia
 
     public function seller()
     {
-        return $this->belongsTo(User::class, 'seller_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function category()

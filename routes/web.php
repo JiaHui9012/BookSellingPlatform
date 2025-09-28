@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Seller\BookController;
 use App\Http\Controllers\Admin\SellerApprovalController;
 use App\Http\Controllers\Admin\UserListController;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -29,6 +30,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('sellers/{seller}/reject', [SellerApprovalController::class, 'reject'])->name('sellers.reject');
     });
     Route::resource('books', BookController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('categories', CategoryController::class)->middleware(['auth', 'role:Admin'])->only(['index', 'store', 'edit', 'update', 'destroy']);
+    Route::patch('categories/{book}/update-category', [CategoryController::class, 'updateBookCategory'])
+        ->name('categories.updateBookCategory')
+        ->middleware(['auth', 'role:Admin']);
 });
 
 

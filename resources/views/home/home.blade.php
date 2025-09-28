@@ -2,7 +2,7 @@
 
 
 @section('content')
-<div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
     <h2 class="text-xl font-bold mb-4">Dashboard</h2>
     @role('Admin')
         @if($pendingSellersCount > 0)
