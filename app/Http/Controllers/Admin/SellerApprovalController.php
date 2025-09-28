@@ -20,14 +20,16 @@ class SellerApprovalController extends Controller
     public function index()
     {
         $pending = SellerProfile::where('status', 'pending')->with('user')->paginate(20);
-        return view('admin.sellers.index', compact('pending'));
+        return view('home.admin.seller_approval.index', compact('pending'));
     }
 
 
     public function approve(SellerProfile $seller)
     {
         $seller->update(['status' => 'approved', 'approved_at' => now()]);
-        $seller->user->assignRole('Seller');
+        $role = $seller->user->roles()->first();
+        $permissions = $role->permissions;
+        $seller->user->givePermissionTo($permissions);
         // notify seller
         return redirect()->back()->with('success', 'Seller approved');
     }

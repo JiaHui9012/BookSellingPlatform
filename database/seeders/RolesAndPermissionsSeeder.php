@@ -38,7 +38,21 @@ class RolesAndPermissionsSeeder extends Seeder
 
 
         $admin = Role::firstOrCreate(['name' => 'Admin']);
-        $admin->givePermissionTo(Permission::all());
+        // $admin->givePermissionTo(Permission::all());
+        $admin->givePermissionTo([
+            'view users',
+            'create users',
+            'edit users',
+
+            'view categories',
+            'create categories',
+            'edit categories',
+
+            'view books',
+            'view orders',
+
+            'approve sellers'
+        ]);
 
 
         $seller = Role::firstOrCreate(['name' => 'Seller']);

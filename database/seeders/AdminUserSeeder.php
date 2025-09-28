@@ -30,6 +30,7 @@ class AdminUserSeeder extends Seeder
         $admin->assignRole($role);
 
         // Assign permissions to user
-        $admin->givePermissionTo(Permission::all());
+        // $admin->givePermissionTo(Permission::all());
+        $admin->givePermissionTo($role->permissions);
     }
 }

@@ -1,76 +1,78 @@
-<?php
+namespace App\Http\Controllers;
 
-
-namespace App\Http\Controllers\Seller;
-
-
-use App\Http\Controllers\Controller;
-use App\Models\Book;
-use App\Models\Category;
 use Illuminate\Http\Request;
-
+use App\Models\Book;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
-    public function __construct()
+    public function index()
     {
-        // $this->middleware(['auth', 'role:Seller']);
+        $books = Book::where('user_id', Auth::id())->get();
+        return view('books.index', compact('books'));
     }
-
-
-    public function index(Request $request)
-    {
-        $books = $request->user()->books()->latest()->paginate(15);
-        return view('seller.books.index', compact('books'));
-    }
-
-
-    public function create()
-    {
-        $categories = Category::orderBy('name')->get();
-        return view('seller.books.create', compact('categories'));
-    }
-
 
     public function store(Request $request)
     {
-        $user = $request->user();
-        $profile = $user->sellerProfile;
-        if (!$profile || $profile->status !== 'approved') {
-            return redirect()->back()->withErrors(['seller' => 'Your seller account must be approved before uploading books.']);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'cover' => 'nullable|image|max:2048',
+        ]);
+
+        $book = new Book();
+        $book->title = $validated['title'];
+        $book->description = $validated['description'] ?? null;
+        $book->price = $validated['price'];
+        $book->user_id = Auth::id();
+        $book->save();
+
+        if ($request->hasFile('cover')) {
+            $book->addMediaFromRequest('cover')->toMediaCollection('covers');
         }
 
+        return redirect()->route('books.index')->with('success', 'Book added successfully.');
+    }
+
+    public function edit(Book $book)
+    {
+        if ($book->user_id != Auth::id()) {
+            abort(403);
+        }
+        return view('books.edit', compact('book'));
+    }
+
+    public function update(Request $request, Book $book)
+    {
+        if ($book->user_id != Auth::id()) {
+            abort(403);
+        }
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'category_id' => 'nullable|exists:categories,id',
-            'cover' => 'required|image|max:2048',
-            'pdf' => 'nullable|mimes:pdf|max:10240',
+            'cover' => 'nullable|image|max:2048',
         ]);
 
-
-        $book = Book::create([
-            'seller_id' => $user->id,
-            'category_id' => $validated['category_id'] ?? null,
-            'title' => $validated['title'],
-            'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'stock' => $validated['stock'],
-            'status' => 'draft',
-        ]);
-
+        $book->update($validated);
 
         if ($request->hasFile('cover')) {
+            $book->clearMediaCollection('covers');
             $book->addMediaFromRequest('cover')->toMediaCollection('covers');
         }
-        if ($request->hasFile('pdf')) {
-            $book->addMediaFromRequest('pdf')->toMediaCollection('pdfs');
+
+        return redirect()->route('books.index')->with('success', 'Book updated successfully.');
+    }
+
+    public function destroy(Book $book)
+    {
+        if ($book->user_id != Auth::id()) {
+            abort(403);
         }
 
-
-        return redirect()->route('seller.books.index')->with('success', 'Book uploaded successfully.');
+        $book->delete();
+        return redirect()->route('books.index')->with('success', 'Book deleted.');
     }
 }
