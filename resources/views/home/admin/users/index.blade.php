@@ -12,7 +12,7 @@
     </div>
     <table class="w-full table-auto">
         <thead>
-            <tr>
+            <tr class="bg-gray-200">
                 <th class="border p-2">ID</th>
                 <th class="border p-2">Name</th>
                 <th class="border p-2">Username</th>
@@ -53,6 +53,7 @@
                     </form>
                 </td>
             </tr>
+            @include('home.admin.users.partials.editUserModal', ['p' => $p])
             @endforeach
             @if (count($users) == 0)
             <tr>
@@ -62,6 +63,5 @@
         </tbody>
     </table>
 </div>
-@include('home.admin.users.partials.editUserModal', ['p' => $p])
 @include('home.admin.users.partials.addUserModal', ['role' => $role])
 @endsection

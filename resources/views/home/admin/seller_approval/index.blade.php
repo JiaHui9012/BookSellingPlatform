@@ -6,7 +6,7 @@
     <h2 class="text-xl font-bold mb-4">Pending Sellers</h2>
     <table class="w-full table-auto">
         <thead>
-            <tr>
+            <tr class="bg-gray-200">
                 <th class="border p-2">ID</th>
                 <th class="border p-2">Name</th>
                 <th class="border p-2">Username</th>

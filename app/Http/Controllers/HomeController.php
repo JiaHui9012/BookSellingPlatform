@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\SellerProfile;
 
 
@@ -13,7 +14,7 @@ class HomeController extends Controller
     public function index()
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         $pendingSellersCount = 0;
         $sellerStatus = null;

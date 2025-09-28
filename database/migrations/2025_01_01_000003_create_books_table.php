@@ -12,14 +12,14 @@ class CreateBooksTable extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('seller_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2)->default(0);
             $table->integer('stock')->default(1);
-            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
+            $table->enum('status', ['draft', 'published', 'archived'])->default('published');
             $table->timestamps();
         });
     }
