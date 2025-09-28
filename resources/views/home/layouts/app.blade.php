@@ -55,7 +55,7 @@
                 @endif
                 @if (auth()->user()->hasDirectPermission('view orders'))
                 <li>
-                    <a href="" class="block px-4 py-2 hover:bg-gray-200">🧾 Orders</a>
+                    <a href="{{ route('orders.index') }}" class="block px-4 py-2 hover:bg-gray-200">🧾 Orders</a>
                 </li>
                 @endif
             </ul>

@@ -20,6 +20,9 @@
                 <!-- <th class="border p-2">Store</th>
                 <th class="border p-2">Submitted</th> -->
                 <th class="border p-2">Status</th>
+                @if($role->name == 'Seller')
+                <th class="border p-2">Seller Status</th>
+                @endif
                 <th class="border p-2">Actions</th>
             </tr>
         </thead>
@@ -43,6 +46,19 @@
                         </select>
                     </form>
                 </td>
+                @if($role->name == 'Seller')
+                <td class="border p-2">
+                    <form action="{{ route('users.sellers.changeStatus', $p->sellerProfile) }}" method="POST" style="display:inline">
+                        @csrf
+                        @method('PATCH')
+                        <select name="seller_status" onchange="this.form.submit()" class="px-2 py-1 border rounded">
+                            <option value="pending" {{ $p->sellerProfile->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="approved" {{ $p->sellerProfile->status === 'approved' ? 'selected' : '' }}>Approved</option>
+                            <option value="rejected" {{ $p->sellerProfile->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        </select>
+                    </form>
+                </td>
+                @endif
                 <td class="border p-2">
                     <!-- <button type="button" class="px-2 py-1 bg-blue-600 text-white rounded"
                         data-bs-toggle="modal" data-bs-target="#editUserModal{{ $p->id }}">

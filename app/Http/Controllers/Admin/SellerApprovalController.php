@@ -41,4 +41,23 @@ class SellerApprovalController extends Controller
         // notify seller
         return redirect()->back()->with('success', 'Seller rejected');
     }
+
+    public function changeStatus(Request $request, SellerProfile $seller)
+    {
+        $request->validate([
+            'seller_status' => 'required|in:pending,approved,rejected',
+        ]);
+
+        $seller->update(['status' => $request->seller_status]);
+
+        $role = $seller->user->roles()->first();
+        $permissions = $role->permissions;
+        if ($request->seller_status == 'approved') {
+            $seller->user->givePermissionTo($permissions);
+        } else {
+            $seller->user->revokePermissionTo($permissions);
+        }
+
+        return redirect()->back()->with('success', 'Seller status updated.');
+    }
 }

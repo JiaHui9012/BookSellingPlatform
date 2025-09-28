@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SellerApprovalController;
 use App\Http\Controllers\Admin\UserListController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -30,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('sellers/pending', [SellerApprovalController::class, 'index'])->name('sellers.pending');
         Route::post('sellers/{seller}/approve', [SellerApprovalController::class, 'approve'])->name('sellers.approve');
         Route::post('sellers/{seller}/reject', [SellerApprovalController::class, 'reject'])->name('sellers.reject');
+        Route::patch('sellers/{seller}/change-status', [SellerApprovalController::class, 'changeStatus'])->name('sellers.changeStatus');
     });
 
     Route::resource('books', BookController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
@@ -38,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('categories/{book}/update-category', [CategoryController::class, 'updateBookCategory'])
         ->name('categories.updateBookCategory')
         ->middleware(['auth', 'role:Admin']);
+
+    Route::resource('orders', OrderController::class)->only(['index']);
 
     Route::resource('account', AccountController::class)->only(['index', 'update']);
 });
