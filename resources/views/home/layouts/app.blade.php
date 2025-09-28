@@ -41,9 +41,6 @@
                         @endforeach
                     </ul>
                 </li>
-                <!-- <li>
-                    <a href="" class="block px-4 py-2 hover:bg-gray-200">👥 Users</a>
-                </li> -->
                 <li>
                     <a href="{{ route('users.sellers.pending') }}" class="block px-4 py-2 hover:bg-gray-200">✅ Seller Approval</a>
                 </li>

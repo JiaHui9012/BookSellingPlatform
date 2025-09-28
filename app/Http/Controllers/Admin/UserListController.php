@@ -39,10 +39,10 @@ class UserListController extends Controller
         return view('home.admin.users.index', compact('users', 'role'));
     }
 
-    // public function edit(User $user)
-    // {
-    //     return view('admin.users.edit', compact('user'));
-    // }
+    public function edit(User $user)
+    {
+        return view('home.admin.users.partials.editUserFields', compact('user'))->render();
+    }
 
     public function store(Request $request)
     {

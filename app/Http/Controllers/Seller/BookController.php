@@ -41,19 +41,20 @@ class BookController extends Controller
         $book->save();
 
         if ($request->hasFile('cover')) {
-            $book->addMediaFromRequest('cover')->toMediaCollection('covers');
+            $book->addMediaFromRequest('cover')->usingName($book->title)->toMediaCollection('covers');
         }
 
         return redirect()->route('books.index')->with('success', 'Book added successfully.');
     }
 
-    // public function edit(Book $book)
-    // {
-    //     if ($book->user_id != Auth::id()) {
-    //         abort(403);
-    //     }
-    //     return view('books.edit', compact('book'));
-    // }
+    public function edit(Book $book)
+    {
+        if ($book->user_id != Auth::id()) {
+            abort(403);
+        }
+        // return view('books.edit', compact('book'));
+        return view('home.seller.books.partials.bookFields', compact('book'))->render();
+    }
 
     public function update(Request $request, Book $book)
     {
@@ -72,8 +73,8 @@ class BookController extends Controller
         $book->update($validated);
 
         if ($request->hasFile('cover')) {
-            $book->clearMediaCollection('covers');
-            $book->addMediaFromRequest('cover')->toMediaCollection('covers');
+            // $book->clearMediaCollection('covers');
+            $book->addMediaFromRequest('cover')->usingName($book->title)->toMediaCollection('covers');
         }
 
         return redirect()->route('books.index')->with('success', 'Book updated successfully.');

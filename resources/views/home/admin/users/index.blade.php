@@ -44,8 +44,12 @@
                     </form>
                 </td>
                 <td class="border p-2">
-                    <button type="button" class="px-2 py-1 bg-blue-600 text-white rounded"
+                    <!-- <button type="button" class="px-2 py-1 bg-blue-600 text-white rounded"
                         data-bs-toggle="modal" data-bs-target="#editUserModal{{ $p->id }}">
+                        Edit
+                    </button> -->
+                    <button class="edit-user-btn px-2 py-1 bg-blue-600 text-white rounded"
+                        data-id="{{ $p->id }}" data-bs-toggle="modal" data-bs-target="#editUserModal">
                         Edit
                     </button>
                     <form action="{{ route('users.remove', $p) }}" method="POST" style="display:inline">@csrf
@@ -53,7 +57,6 @@
                     </form>
                 </td>
             </tr>
-            @include('home.admin.users.partials.editUserModal', ['p' => $p])
             @endforeach
             @if (count($users) == 0)
             <tr>
@@ -64,4 +67,25 @@
     </table>
 </div>
 @include('home.admin.users.partials.addUserModal', ['role' => $role])
+@include('home.admin.users.partials.editUserModal')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const editButtons = document.querySelectorAll('.edit-user-btn');
+    const modalBody = document.getElementById('editUserBody');
+    const form = document.getElementById('editUserForm');
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const userId = button.dataset.id;
+
+            fetch(`/users/${userId}/edit`)
+                .then(res => res.text())
+                .then(html => {
+                    modalBody.innerHTML = html;
+                    form.action = `/users/${userId}/update`; 
+                });
+        });
+    });
+});
+</script>
 @endsection
