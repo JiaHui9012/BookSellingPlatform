@@ -61,7 +61,7 @@
             </ul>
             <ul class="space-y-2 mb-4 absolute bottom-0 w-full">
                 <li>
-                    <a href="" class="block px-4 py-2 hover:bg-gray-200">👤 {{ auth()->user()->name }}</a>
+                    <a href="{{ route('account.index') }}" class="block px-4 py-2 hover:bg-gray-200">👤 {{ auth()->user()->name }}</a>
                 </li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST" class="px-4 hover:bg-gray-200">
