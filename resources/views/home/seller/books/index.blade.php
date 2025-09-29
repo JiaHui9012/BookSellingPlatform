@@ -86,7 +86,7 @@
                 </td>
                 <td class="border p-2">RM {{ $bk->price }}</td>
                 <td class="border p-2">{{ $bk->stock }}</td>
-                <td class="border p-2"><img class="h-52" src="{{ $bk->getFirstMediaUrl('covers') }}" /></td>
+                <td class="border p-2" style="min-width:200px;"><img class="h-52" src="{{ $bk->getFirstMediaUrl('covers') }}" /></td>
                 @role('Seller')
                 <td class="border p-2">
                     <button class="px-2 py-1 bg-blue-600 text-white rounded edit-book-btn"

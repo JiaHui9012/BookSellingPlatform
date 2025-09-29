@@ -11,13 +11,17 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
-<body class="bg-gray-100 flex">
+<body class="bg-gray-100 flex" x-data="{ open: false }">
     <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow h-screen fixed">
-        <div class="p-4 border-b">
+    <aside 
+        :class="open ? 'translate-x-0' : '-translate-x-64'"
+        class="fixed lg:fixed top-0 left-0 w-64 bg-white shadow h-full transform transition-transform duration-200 lg:translate-x-0 z-50 overflow-y-auto">
+        
+        <div class="p-4 border-b flex justify-between items-center">
             <a href="/" class="text-xl font-bold">📚 {{ config('app.name', 'Book Selling Platform') }}</a>
+            <button @click="open = false" class="lg:hidden text-xl">✖</button>
         </div>
-        <nav class="mt-4">
+        <nav class="mt-4 flex flex-col justify-between h-[calc(100%-4rem)]">
             <ul class="space-y-2">
                 <li>
                     <a href="{{ route('home') }}" class="block px-4 py-2 hover:bg-gray-200">🏠 Dashboard</a>
@@ -73,8 +77,11 @@
         </nav>
     </aside>
 
+    <!-- Mobile open button -->
+    <button @click="open = true" x-show="!open" x-transition.opacity class="lg:hidden fixed top-4 left-4 z-50 bg-white shadow p-2 rounded">☰</button>
+
     <!-- Main content -->
-    <main class="flex-1 ml-64 p-6">
+    <main class="flex-1 lg:ml-64 p-4 sm:p-6">
         @if(session('success'))
         <div class="bg-green-100 p-3 rounded mb-4">{{ session('success') }}</div>
         @endif
