@@ -2,6 +2,30 @@
 
 
 @section('content')
+<div class="max-w-4xl mx-auto p-6 bg-white rounded shadow mb-4 flex">
+    <div>
+        @if(auth()->user()->hasRole('Admin'))
+        <form action="{{ route('books.sellerfilter') }}" method="POST" style="display:inline">
+            @csrf
+            <select name="seller" onchange="this.form.submit()" class="p-2 mr-3 border rounded">
+                <option value="0">All Sellers</option>
+                @foreach($sellers as $s)
+                <option value="{{ $s->user->id }}" {{ !empty($sellerfilter) && $s->user->id == $sellerfilter ? 'selected' : '' }}>{{ $s->user->name }}</option>
+                @endforeach
+            </select>
+        </form>
+        @endif
+    </div>
+    <div class="flex-1">
+        <form action="{{ route('books.search') }}" method="GET" class="flex">
+            <input class="form-control" type="text" name="keyword" placeholder="Search books..." value="{{ $keyword ?? '' }}">
+            @if(!empty($sellerfilter))
+            <input type="hidden" name="seller" value="{{ $sellerfilter }}">
+            @endif
+            <button class="w-32 ml-3 p-2 border rounded hover:bg-gray-100" type="submit">Search</button>
+        </form>
+    </div>
+</div>
 <div class="max-w-4xl mx-auto p-6 bg-white rounded shadow">
     <div class="flex justify-between">
         <h2 class="text-xl font-bold mb-4">{{ auth()->user()->hasRole('Seller')? 'My ':'' }}Books</h2>

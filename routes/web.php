@@ -35,6 +35,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('books', BookController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
+    Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
+    Route::post('/books/filter/seller', [BookController::class, 'filterBySeller'])->name('books.sellerfilter');
 
     Route::resource('categories', CategoryController::class)->middleware(['auth', 'role:Admin'])->only(['index', 'store', 'edit', 'update', 'destroy']);
     Route::patch('categories/{book}/update-category', [CategoryController::class, 'updateBookCategory'])
