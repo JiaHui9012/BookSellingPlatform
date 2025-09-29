@@ -102,12 +102,11 @@ class BookController extends Controller
         $user = Auth::user();
         $keyword = $request->input('keyword');
         $sellerId = $request->input('seller');
+        $categoryId = $request->input('category');
 
         $books = Book::query()
             ->when($keyword, function ($query) use ($keyword) {
-                $query->where(function ($q) use ($keyword) {
-                    $q->where('title', 'LIKE', "%{$keyword}%");
-                });
+                $query->where('title', 'LIKE', "%{$keyword}%");
             })
             ->when($user->hasRole('Seller'), function ($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -115,40 +114,43 @@ class BookController extends Controller
             ->when($user->hasRole('Admin') && $sellerId && $sellerId != 0, function ($query) use ($sellerId) {
                 $query->where('user_id', $sellerId);
             })
+            ->when($categoryId && $categoryId != 0, function ($query) use ($categoryId) {
+                $query->where('category_id', $categoryId);
+            })
             ->get();
 
-        $sellers = collect();
-        if ($user->hasRole('Admin')) {
-            $sellers = SellerProfile::with('user:id,name')->get();
-        }
+        $sellers = $user->hasRole('Admin')
+            ? SellerProfile::with('user:id,name')->get()
+            : collect();
 
-        return view('home.seller.books.index', [
-            'books' => $books,
-            'sellers' => $sellers,
-            'keyword' => $keyword,
-            'sellerfilter' => $sellerId,
-        ]);
+        return view('home.seller.books.index', compact(
+            'books',
+            'sellers',
+            'keyword',
+            'sellerId',
+            'categoryId'
+        ));
     }
 
-    public function filterBySeller(Request $request)
-    {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $sellerId = $request->input('seller');
+    // public function filterBySeller(Request $request)
+    // {
+    //     /** @var \App\Models\User $user */
+    //     $user = Auth::user();
+    //     $sellerId = $request->input('seller');
 
-        $books = Book::when($sellerId != 0, function ($query) use ($sellerId) {
-            $query->where('user_id', $sellerId);
-        })->get();
+    //     $books = Book::when($sellerId != 0, function ($query) use ($sellerId) {
+    //         $query->where('user_id', $sellerId);
+    //     })->get();
 
-        $sellers = collect();
-        if ($user->hasRole('Admin')) {
-            $sellers = SellerProfile::with('user:id,name')->get();
-        }
+    //     $sellers = collect();
+    //     if ($user->hasRole('Admin')) {
+    //         $sellers = SellerProfile::with('user:id,name')->get();
+    //     }
 
-        return view('home.seller.books.index', [
-            'books' => $books,
-            'sellers' => $sellers,
-            'sellerfilter' => $sellerId,
-        ]);
-    }
+    //     return view('home.seller.books.index', [
+    //         'books' => $books,
+    //         'sellers' => $sellers,
+    //         'sellerfilter' => $sellerId,
+    //     ]);
+    // }
 }
