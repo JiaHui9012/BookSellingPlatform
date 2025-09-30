@@ -97,4 +97,7 @@ Visit: http://localhost:8000
 
 (Future: place orders, wishlist, etc.)
 
+## For More
+
+View [Book Selling Platform Documentation](https://docs.google.com/document/d/1Um8Fbbmbd8Ov936dxeHyrtzELO4GNJ0y8I8TDgpn9nE/edit?usp=sharing)
 
