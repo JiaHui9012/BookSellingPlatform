@@ -5,7 +5,7 @@
 <div class="max-w-4xl mx-auto p-6 bg-white rounded shadow mb-4">
     <form action="{{ route('books.search') }}" method="GET" class="flex space-x-3">
 
-        @if(auth()->user()->hasRole('Admin'))
+        @if(!(auth()->user()->hasRole('Seller')))
         <select name="seller" class="p-2 border rounded">
             <option value="0">All Sellers</option>
             @foreach($sellers as $s)
@@ -46,9 +46,9 @@
     <table class="w-full table-auto">
         <thead>
             <tr class="bg-gray-200">
-                @role('Admin')
+                @if(!(auth()->user()->hasRole('Seller')))
                 <th class="border p-2">Seller</th>
-                @endrole
+                @endif
                 <th class="border p-2">Title</th>
                 <th class="border p-2">Description</th>
                 <th class="border p-2">Category</th>
@@ -63,9 +63,9 @@
         <tbody>
             @foreach($books as $bk)
             <tr>
-                @role('Admin')
+                @if(!(auth()->user()->hasRole('Seller')))
                 <td class="border p-2">{{ $bk->seller->name }} ({{ $bk->seller->username }})</td>
-                @endrole
+                @endif
                 <td class="border p-2">{{ $bk->title }}</td>
                 <td class="border p-2">{{ $bk->description }}</td>
                 <td class="border p-2">

@@ -76,8 +76,8 @@ class UserListController extends Controller
             // Assign role to user
             $user->assignRole($role);
 
-            // Assign permissions if Admin
-            if ($roleName === 'Admin') {
+            // Assign permissions
+            if ($roleName != 'Seller') {
                 $permissions = $role->permissions()->pluck('name')->toArray();
                 $user->givePermissionTo($permissions);
             }

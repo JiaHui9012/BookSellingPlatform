@@ -65,7 +65,6 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $buyer = Role::firstOrCreate(['name' => 'Buyer']);
         $buyer->givePermissionTo([
-            'view categories',
             'view books',
             'view orders'
         ]);

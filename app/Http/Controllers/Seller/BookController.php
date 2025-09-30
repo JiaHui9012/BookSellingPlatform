@@ -16,7 +16,7 @@ class BookController extends Controller
         $user = Auth::user();
         $sellers = collect();
 
-        if ($user->hasRole('Admin')) {
+        if ($user->hasRole('Admin') || $user->hasRole('Buyer')) {
             $books = Book::latest()->get();
             $sellers = SellerProfile::with('user:id,name')->get();
         } else {
@@ -111,7 +111,7 @@ class BookController extends Controller
             ->when($user->hasRole('Seller'), function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
-            ->when($user->hasRole('Admin') && $sellerId && $sellerId != 0, function ($query) use ($sellerId) {
+            ->when(!$user->hasRole('Seller') && $sellerId && $sellerId != 0, function ($query) use ($sellerId) {
                 $query->where('user_id', $sellerId);
             })
             ->when($categoryId && $categoryId != 0, function ($query) use ($categoryId) {
@@ -119,7 +119,7 @@ class BookController extends Controller
             })
             ->get();
 
-        $sellers = $user->hasRole('Admin')
+        $sellers = !$user->hasRole('Seller')
             ? SellerProfile::with('user:id,name')->get()
             : collect();
 
